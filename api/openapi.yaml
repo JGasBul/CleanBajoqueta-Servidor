@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Proyecto Biometria - Pepe Gascó Bule
+  description: ""
+  contact:
+    email: pepegascobule@gmail.com
+  version: 1.0.11
+servers:
+- url: /
+tags:
+- name: Mediciones
+  description: Metodos para trabajar con las mediciones
+paths:
+  /mediciones/guardar_mediciones:
+    post:
+      tags:
+      - Mediciones
+      summary: Añade un nueva medicion a la base de datos
+      description: Añade un nueva medicion a la base de datos
+      operationId: addMed
+      requestBody:
+        description: Añade un nueva medicion a la base de datos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/setMedicion'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/setMedicion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/setMedicion'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setMedicion'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/setMedicion'
+        "405":
+          description: Invalid input
+      x-swagger-router-controller: Mediciones
+  /mediciones/recuperar_medicions:
+    get:
+      tags:
+      - Mediciones
+      summary: Recoger mediciones guardadas
+      description: Recoger mediciones guardadas
+      operationId: getMed
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/getMedicion'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/getMedicion'
+        "400":
+          description: Invalid status value
+      x-swagger-router-controller: Mediciones
+components:
+  schemas:
+    setMedicion:
+      required:
+      - date
+      - value
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        value:
+          type: string
+        date:
+          type: string
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        value: 0
+      xml:
+        name: medicion
+    getMedicion:
+      required:
+      - date
+      - value
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        value:
+          type: integer
+          format: float
+        date:
+          type: string
+          format: date-time
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        id: 10
+        value: 0
+      xml:
+        name: medicion
+
