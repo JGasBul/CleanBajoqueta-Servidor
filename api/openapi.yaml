@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Proyecto Biometria - Pepe Gascó Bule
+  title: API Clean Bajoqueta
   description: ""
   contact:
     email: pepegascobule@gmail.com
@@ -64,6 +64,8 @@ paths:
             application/xml:
               schema:
                 type: array
+                xml:
+                  name: medicion
                 items:
                   $ref: '#/components/schemas/getMedicion'
         "400":
@@ -73,43 +75,79 @@ components:
   schemas:
     setMedicion:
       required:
-      - date
-      - value
+      - idContaminante
+      - instante
+      - latitud
+      - longitud
+      - valor
       type: object
       properties:
         id:
           type: integer
-          format: int64
           example: 10
-        value:
+        idContaminante:
+          type: integer
+          example: 2
+        instante:
           type: string
-        date:
-          type: string
+        valor:
+          type: number
+          format: float
+        latitud:
+          type: number
+          format: float
+        longitud:
+          type: number
+          format: float
+        temperatura:
+          type: number
+          format: float
       example:
-        date: 2000-01-23T04:56:07.000+00:00
-        value: 0
+        idContaminante: 1
+        instante: 24/08/2023
+        valor: 123
+        latitud: 4
+        longitud: 3
+        temperatura: 20
       xml:
         name: medicion
     getMedicion:
       required:
-      - date
-      - value
+      - id
+      - idContaminante
+      - instante
+      - latitud
+      - longitud
+      - valor
       type: object
       properties:
         id:
           type: integer
-          format: int64
           example: 10
-        value:
+        idContaminante:
           type: integer
-          format: float
-        date:
+          example: 2
+        instante:
           type: string
-          format: date-time
+        valor:
+          type: number
+          format: float
+        latitud:
+          type: number
+          format: float
+        longitud:
+          type: number
+          format: float
+        temperatura:
+          type: number
+          format: float
       example:
-        date: 2000-01-23T04:56:07.000+00:00
         id: 10
-        value: 0
+        idContaminante: 1
+        instante: 24/08/2023
+        valor: 123
+        latitud: 4
+        longitud: 3
+        temperatura: 20
       xml:
         name: medicion
-

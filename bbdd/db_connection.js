@@ -1,8 +1,10 @@
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
-  host: "127.0.0.1", 
+  host: "localhost",
   user: "root",
   password: "",
-  database: "bbdd_medioambiente"
+  database: "bbdd_cleanbajoqueta"
 });
+con.connect(function (err) { if (err) throw err; });
+module.exports = con;
