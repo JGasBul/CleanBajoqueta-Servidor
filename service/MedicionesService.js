@@ -1,17 +1,6 @@
 //Sustituir por db_connection.js
 'use strict';
-
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "bbdd_medioambiente"
-});
-con.connect(function (err) { if (err) throw err; });
-
-
+var con = require('../bbdd/db_connection.js');
 
 /**
  * Añade un nueva medicion a la base de datos
@@ -25,16 +14,16 @@ exports.addMed = function (body) {
     var jsonBody = JSON.stringify(body);
     var toSend = JSON.parse(jsonBody);
     console.log(toSend);
-    var sql = "INSERT INTO mediciones (value, date) VALUES (" + toSend["value"] + ", '" + toSend["date"] + "')";
+    var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (" + toSend["idContaminante"] + ", '" + toSend["instante"] + "', " + toSend["valor"] + ", " + toSend["latitud"] + ", " + toSend["longitud"] + ", " + toSend["temperatura"] + ")";
     con.query(sql, function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
       console.log(result);
-      var examples = {};
-      examples['application/json'] = JSON.stringify(body);
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(body);
       console.log(body);
-      if (Object.keys(examples).length > 0) {
-        resolve(examples[Object.keys(examples)[0]]);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
       } else {
         resolve();
       }
@@ -51,13 +40,13 @@ exports.addMed = function (body) {
  **/
 exports.getMed = function () {
   return new Promise(function (resolve, reject) {
-    con.query("SELECT * FROM mediciones", function (err, result, fields) {
+    con.query("SELECT * FROM medicion", function (err, result, fields) {
       if (err) throw err;
-      var examples = {};
-      examples['application/json'] = JSON.stringify(result);
-      console.log(examples);
-      if (Object.keys(examples).length > 0) {
-        resolve(examples[Object.keys(examples)[0]]);
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      console.log(jsonToSend);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
       } else {
         resolve();
       }
