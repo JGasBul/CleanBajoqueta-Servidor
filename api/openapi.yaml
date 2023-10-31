@@ -1,20 +1,22 @@
 openapi: 3.0.3
 info:
   title: API Clean Bajoqueta
-  description: ""
+  description: ''
   contact:
     email: pepegascobule@gmail.com
   version: 1.0.11
 servers:
-- url: /
+  - url: /
 tags:
-- name: Mediciones
-  description: Metodos para trabajar con las mediciones
+  - name: Mediciones
+    description: Metodos para trabajar con las mediciones
+  - name: Login
+    description: Metodos para autentificacion
 paths:
   /mediciones/guardar_mediciones:
     post:
       tags:
-      - Mediciones
+        - Mediciones
       summary: Añade un nueva medicion a la base de datos
       description: Añade un nueva medicion a la base de datos
       operationId: addMed
@@ -32,7 +34,7 @@ paths:
               $ref: '#/components/schemas/setMedicion'
         required: true
       responses:
-        "200":
+        '200':
           description: Successful operation
           content:
             application/json:
@@ -41,18 +43,18 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/setMedicion'
-        "405":
+        '400':
           description: Invalid input
       x-swagger-router-controller: Mediciones
   /mediciones/recuperar_medicions:
     get:
       tags:
-      - Mediciones
+        - Mediciones
       summary: Recoger mediciones guardadas
       description: Recoger mediciones guardadas
       operationId: getMed
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
@@ -68,18 +70,87 @@ paths:
                   name: medicion
                 items:
                   $ref: '#/components/schemas/getMedicion'
-        "400":
+        '400':
           description: Invalid status value
       x-swagger-router-controller: Mediciones
+  /login/getUserByEmail:
+    get:
+      tags:
+        - Login
+      summary: Comprobar si usuario existe
+      description: Comprobar si usuario existe
+      operationId: getUser
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Se ha encontrado un registro
+          content:
+            applicaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/getUserByEmail'
+                x-content-type: applicaction/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: user
+                items:
+                  $ref: '#/components/schemas/getUserByEmail'
+        '400':
+          description: Error al buscar usuarios
+      x-swagger-router-controller: Login
+  /login/insertUser:
+    post:
+      tags:
+        - Login
+      summary: Insertar nuevo usuario
+      description: Añade un nuevo usuario a la base de datos
+      operationId: insertUser
+      requestBody:
+        description: Añade un nuevo usuario a la base de datos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/user'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Invalid input
+      x-swagger-router-controller: Login
 components:
   schemas:
     setMedicion:
       required:
-      - idContaminante
-      - instante
-      - latitud
-      - longitud
-      - valor
+        - idContaminante
+        - instante
+        - latitud
+        - longitud
+        - valor
       type: object
       properties:
         id:
@@ -103,7 +174,7 @@ components:
           type: number
           format: float
       example:
-        idContaminante: 1
+        idContaminante: 4
         instante: 24/08/2023
         valor: 123
         latitud: 4
@@ -113,12 +184,12 @@ components:
         name: medicion
     getMedicion:
       required:
-      - id
-      - idContaminante
-      - instante
-      - latitud
-      - longitud
-      - valor
+        - id
+        - idContaminante
+        - instante
+        - latitud
+        - longitud
+        - valor
       type: object
       properties:
         id:
@@ -143,7 +214,7 @@ components:
           format: float
       example:
         id: 10
-        idContaminante: 1
+        idContaminante: 4
         instante: 24/08/2023
         valor: 123
         latitud: 4
@@ -151,3 +222,36 @@ components:
         temperatura: 20
       xml:
         name: medicion
+    user:
+      required:
+        - contraseña
+        - email
+        - nombreApellido
+        - telefono
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        contraseña:
+          type: string
+          format: password
+        nombreApellido:
+          type: string
+        telefono:
+          type: string
+      example:
+        email: email@email.com
+        contraseña: esternocleidomastoideo
+        nombreApellido: Jhon Doe
+        telefono: '123456789'
+    getUserByEmail:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      example:
+        email: email@email.com

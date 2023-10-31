@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha --timeout 25000 --colors"
   },
   "keywords": [
     "swagger"
@@ -16,6 +17,10 @@
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
     "mysql": "^2.18.1",
-    "oas3-tools": "^2.2.3"
+    "oas3-tools": "^2.2.3",
+    "chai": "^4.2.0",
+    "faker": "^4.1.0",
+    "mocha": "^6.2.1",
+    "supertest": "^4.0.2"
   }
 }

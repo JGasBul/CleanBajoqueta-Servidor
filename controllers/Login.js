@@ -1,10 +1,10 @@
 'use strict';
-//Logica fake para llamar a la logica del negocio MedicionesServices.JS
+//Logica fake para llamar a la logica del negocio LoginService.JS
 var utils = require('../utils/writer.js');
-var Mediciones = require('../service/MedicionesService');
+var Login = require('../service/LoginService');
 
-module.exports.addMed = function addMed (req, res, next, body) {
-  Mediciones.addMed(body)
+module.exports.getUser = function getUser (req, res, next, email) {
+  Login.getUser(email)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -13,8 +13,8 @@ module.exports.addMed = function addMed (req, res, next, body) {
     });
 };
 
-module.exports.getMed = function getMed (req, res, next) {
-  Mediciones.getMed()
+module.exports.insertUser = function insertUser (req, res, next, body) {
+  Login.insertUser(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

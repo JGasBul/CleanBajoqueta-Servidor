@@ -1,6 +1,6 @@
-//Sustituir por db_connection.js
 'use strict';
 var con = require('../bbdd/db_connection.js');
+//Logica de negocio mediciones
 
 /**
  * Añade un nueva medicion a la base de datos
