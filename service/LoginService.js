@@ -11,7 +11,7 @@ var con = require('../bbdd/db_connection.js');
  **/
 exports.getUser = function (email) {
   return new Promise(function (resolve, reject) {
-    var query = "SELECT contraseña FROM usuario WHERE email = '" + email + "'";
+    var query = "SELECT * FROM usuario WHERE email = '" + email + "'";
     console.log(query);
     con.query(query, function (err, result, fields) {
       if (err) throw err;
