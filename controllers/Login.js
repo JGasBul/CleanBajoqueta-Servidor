@@ -16,7 +16,11 @@ module.exports.getUser = function getUser (req, res, next, email) {
 module.exports.insertUser = function insertUser (req, res, next, body) {
   Login.insertUser(body)
     .then(function (response) {
-      utils.writeJson(res, response);
+      if (response["code"]) {
+        utils.writeJson(res, response,400);
+      }else{
+        utils.writeJson(res, response);
+      }
     })
     .catch(function (response) {
       utils.writeJson(res, response);

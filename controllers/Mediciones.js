@@ -6,7 +6,11 @@ var Mediciones = require('../service/MedicionesService');
 module.exports.addMed = function addMed (req, res, next, body) {
   Mediciones.addMed(body)
     .then(function (response) {
-      utils.writeJson(res, response);
+      if (response["code"]) {
+        utils.writeJson(res, response,400);
+      }else{
+        utils.writeJson(res, response);
+      }
     })
     .catch(function (response) {
       utils.writeJson(res, response);

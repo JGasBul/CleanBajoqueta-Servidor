@@ -16,16 +16,21 @@ exports.addMed = function (body) {
     console.log(toSend);
     var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (" + toSend["idContaminante"] + ", '" + toSend["instante"] + "', " + toSend["valor"] + ", " + toSend["latitud"] + ", " + toSend["longitud"] + ", " + toSend["temperatura"] + ")";
     con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-      console.log(result);
-      var jsonToSend = {};
-      jsonToSend['application/json'] = JSON.stringify(body);
-      console.log(body);
-      if (Object.keys(jsonToSend).length > 0) {
-        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      if (err) {
+        console.log("Mysql error " + err)
+        resolve(err);
+        //throw err;
       } else {
-        resolve();
+        console.log("1 record inserted");
+        console.log(result);
+        var jsonToSend = {};
+        jsonToSend['application/json'] = JSON.stringify(body);
+        console.log(body);
+        if (Object.keys(jsonToSend).length > 0) {
+          resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+        } else {
+          resolve();
+        }
       }
     });
   });
