@@ -4,11 +4,12 @@ var con = require('../bbdd/db_connection.js');
 
 /**
  * Añade un nueva medicion a la base de datos
- * Añade un nueva medicion a la base de datos
  *
  * body Medicion Añade un nueva medicion a la base de datos
  * returns Medicion
  **/
+
+//body(JSON)-> addMed()-> 
 exports.addMed = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
@@ -43,6 +44,8 @@ exports.addMed = function (body) {
  *
  * returns List
  **/
+
+// getMed()->List(JSON)
 exports.getMed = function () {
   return new Promise(function (resolve, reject) {
     con.query("SELECT * FROM medicion", function (err, result, fields) {

@@ -3,6 +3,7 @@
 var utils = require('../utils/writer.js');
 var Mediciones = require('../service/MedicionesService');
 
+//req:Txt, res:Txt, next:Txt, body:Txt --> addMed()-->JSON
 module.exports.addMed = function addMed (req, res, next, body) {
   Mediciones.addMed(body)
     .then(function (response) {
@@ -17,6 +18,7 @@ module.exports.addMed = function addMed (req, res, next, body) {
     });
 };
 
+//eq:Txt, res:Txt, next:Txt --> getMed() --> JSON
 module.exports.getMed = function getMed (req, res, next) {
   Mediciones.getMed()
     .then(function (response) {

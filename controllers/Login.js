@@ -3,6 +3,8 @@
 var utils = require('../utils/writer.js');
 var Login = require('../service/LoginService');
 
+//Obtiene el usuario
+//req:Txt, res:Txt, next:Txt, body:Txt --> insertUser()--> JSON
 module.exports.getUser = function getUser (req, res, next, email) {
   Login.getUser(email)
     .then(function (response) {
@@ -13,6 +15,8 @@ module.exports.getUser = function getUser (req, res, next, email) {
     });
 };
 
+//Inserta usuario en base de datos
+//req:Txt, res:Txt, next:Txt, body:Txt --> insertUser()
 module.exports.insertUser = function insertUser (req, res, next, body) {
   Login.insertUser(body)
     .then(function (response) {

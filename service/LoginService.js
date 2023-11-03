@@ -9,6 +9,8 @@ var con = require('../bbdd/db_connection.js');
  * email List 
  * returns List
  **/
+
+//email:TXT ->getUser()->JSON
 exports.getUser = function (email) {
   return new Promise(function (resolve, reject) {
     var query = "SELECT * FROM usuario WHERE email = '" + email + "'";
@@ -34,6 +36,8 @@ exports.getUser = function (email) {
  * body User Añade un nuevo usuario a la base de datos
  * returns user
  **/
+
+//body:JSON-> insertUser()->
 exports.insertUser = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
