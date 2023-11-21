@@ -9,18 +9,20 @@ var con = require('../bbdd/db_connection.js');
  * returns List
  **/
 exports.deleteUser = function(email) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "email" : "email@email.com"
-}, {
-  "email" : "email@email.com"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+  return new Promise(function (resolve, reject) {
+    var query = "DELETE FROM usuario WHERE  email='" + email + "'";
+    console.log(query);
+    con.query(query, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      console.log(jsonToSend);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)]);
+      } else {
+        resolve();
+      }
+    });
   });
 }
 
