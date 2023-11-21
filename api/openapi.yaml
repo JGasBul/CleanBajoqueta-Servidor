@@ -107,7 +107,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/getUserByEmail"
         "400":
-          description: Error al buscar usuarios
+          description: Error al buscar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
   /user/insertUser:
     post:
@@ -131,7 +131,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Successful operation
+          description: Usuario Insertado
           content:
             application/json:
               schema:
@@ -140,7 +140,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/user"
         "400":
-          description: Invalid input
+          description: Error al insertar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
   /user/updateUser:
     put:
@@ -164,7 +164,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Successful operation
+          description: Usuario actualizado
           content:
             application/json:
               schema:
@@ -173,7 +173,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/newUser"
         "400":
-          description: Invalid input
+          description: Error al actualizar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
   /user/deleteByEmail:
     delete:
@@ -209,7 +209,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/getUserByEmail"
         "400":
-          description: Error al buscar usuarios
+          description: Error al eliminar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
 components:
   schemas:

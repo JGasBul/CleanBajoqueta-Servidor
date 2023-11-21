@@ -8,7 +8,7 @@ var con = require('../bbdd/db_connection.js');
  * email String 
  * returns List
  **/
-exports.deleteUser = function(email) {
+exports.deleteUser = function (email) {
   return new Promise(function (resolve, reject) {
     var query = "DELETE FROM usuario WHERE  email='" + email + "'";
     console.log(query);
@@ -34,7 +34,7 @@ exports.deleteUser = function(email) {
  * email String 
  * returns List
  **/
-exports.getUser = function(email) {
+exports.getUser = function (email) {
   return new Promise(function (resolve, reject) {
     var query = "SELECT * FROM usuario WHERE email = '" + email + "'";
     console.log(query);
@@ -60,7 +60,7 @@ exports.getUser = function(email) {
  * body User Añade un nuevo usuario a la base de datos
  * returns user
  **/
-exports.insertUser = function(body) {
+exports.insertUser = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
     var toSend = JSON.parse(jsonBody);
@@ -108,21 +108,35 @@ exports.insertUser = function(body) {
  * body NewUser Actualizar un usuario ya creado
  * returns newUser
  **/
-exports.updateUser = function(body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "email" : "email@email.com",
-  "newEmail" : "newEmail@email.com",
-  "contraseña" : "newPass",
-  "nombreApellido" : "New Jhon Doe",
-  "telefono" : "987654321"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.updateUser = function (body) {
+  return new Promise(function (resolve, reject) {
+    var jsonBody = JSON.stringify(body);
+    var dataUpdate = JSON.parse(jsonBody);
+    var sql = "UPDATE usuario SET email='" + dataUpdate["newEmail"] + "', contraseña='" + dataUpdate["contraseña"] + "', nombreApellido='" + dataUpdate["nombreApellido"] + "' WHERE  email='" + dataUpdate["email"] + "';"
+    var sql2 = "UPDATE telefono SET telefono='" + dataUpdate["telefono"] + "' WHERE  email='" + dataUpdate["newEmail"] + "';"
+    con.query(sql, function (err, result) {
+      if (err) {
+        console.log("Mysql error " + err)
+        resolve(err);
+        //throw err;
+      } else {
+        console.log("Actualizado datos correctamente");
+        con.query(sql2, function (err, result) {
+          if (err) {
+            console.log("Mysql error " + err)
+            resolve(err);
+            //throw err;
+          } else {
+            console.log("Actualizado telefono correctamente");
+            if (Object.keys(result).length > 0) {
+              resolve(dataUpdate);
+            } else {
+              resolve();
+            }
+          }
+        });
+      }
+    });
   });
 }
 
