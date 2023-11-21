@@ -16,7 +16,6 @@ exports.deleteUser = function (email) {
       if (err) throw err;
       var jsonToSend = {};
       jsonToSend['application/json'] = JSON.stringify(result);
-      console.log(jsonToSend);
       if (Object.keys(jsonToSend).length > 0) {
         resolve(jsonToSend[Object.keys(jsonToSend)]);
       } else {
@@ -40,11 +39,21 @@ exports.getUser = function (email) {
     console.log(query);
     con.query(query, function (err, result, fields) {
       if (err) throw err;
-      var jsonToSend = {};
-      jsonToSend['application/json'] = JSON.stringify(result);
-      console.log(jsonToSend);
-      if (Object.keys(jsonToSend).length > 0) {
-        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      var jsonData = {};
+      jsonData = result;
+      if (Object.keys(jsonData).length > 0) {
+        var query = "SELECT * FROM telefono WHERE email = '" + email + "'";
+        con.query(query, function (err, result, fields) {
+          if (err) throw err;
+          jsonData[0]["telefono"] = result[0]["telefono"]
+          var jsonToSend = {};
+          jsonToSend['application/json'] = JSON.stringify(jsonData);
+          if (Object.keys(jsonToSend).length > 0) {
+            resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+          } else {
+            resolve();
+          }
+        });
       } else {
         resolve();
       }
@@ -64,30 +73,26 @@ exports.insertUser = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
     var toSend = JSON.parse(jsonBody);
-    console.log(toSend);
-    var sql = "INSERT INTO usuario (email, contraseña, nombreApellido) VALUES ('" + toSend["email"] + "', '" + toSend["contraseña"] + "', '" + toSend["nombreApellido"] + "')";
-    con.query(sql, function (err, result) {
+    var query = "INSERT INTO usuario (email, contraseña, nombreApellido) VALUES ('" + toSend["email"] + "', '" + toSend["contraseña"] + "', '" + toSend["nombreApellido"] + "')";
+    console.log(query);
+    con.query(query, function (err, result) {
       if (err) {
         console.log("Mysql error " + err)
         resolve(err);
         //throw err;
       } else {
         console.log("1 record inserted");
-        console.log(result);
         var jsonToSend = {};
         jsonToSend['application/json'] = JSON.stringify(body);
-        console.log(body);
         if (Object.keys(jsonToSend).length > 0) {
-          var sql = "INSERT INTO telefono (email, telefono) VALUES ('" + toSend["email"] + "', '" + toSend["telefono"] + "')";
-          con.query(sql, function (err, result) {
+          var query = "INSERT INTO telefono (email, telefono) VALUES ('" + toSend["email"] + "', '" + toSend["telefono"] + "')";
+          con.query(query, function (err, result) {
             if (err) {
               console.log("Mysql error " + err)
               resolve(err);
               //throw err;
             } else {
               console.log("1 record inserted");
-              console.log(result);
-              console.log(body);
               if (Object.keys(jsonToSend).length > 0) {
                 resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
               } else {
@@ -112,16 +117,16 @@ exports.updateUser = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
     var dataUpdate = JSON.parse(jsonBody);
-    var sql = "UPDATE usuario SET email='" + dataUpdate["newEmail"] + "', contraseña='" + dataUpdate["contraseña"] + "', nombreApellido='" + dataUpdate["nombreApellido"] + "' WHERE  email='" + dataUpdate["email"] + "';"
-    var sql2 = "UPDATE telefono SET telefono='" + dataUpdate["telefono"] + "' WHERE  email='" + dataUpdate["newEmail"] + "';"
-    con.query(sql, function (err, result) {
+    var query = "UPDATE usuario SET email='" + dataUpdate["newEmail"] + "', contraseña='" + dataUpdate["contraseña"] + "', nombreApellido='" + dataUpdate["nombreApellido"] + "' WHERE  email='" + dataUpdate["email"] + "';"
+    var query2 = "UPDATE telefono SET telefono='" + dataUpdate["telefono"] + "' WHERE  email='" + dataUpdate["newEmail"] + "';"
+    con.query(query, function (err, result) {
       if (err) {
         console.log("Mysql error " + err)
         resolve(err);
         //throw err;
       } else {
         console.log("Actualizado datos correctamente");
-        con.query(sql2, function (err, result) {
+        con.query(query2, function (err, result) {
           if (err) {
             console.log("Mysql error " + err)
             resolve(err);
