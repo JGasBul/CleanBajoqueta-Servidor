@@ -216,6 +216,8 @@ components:
     setMedicion:
       required:
         - idContaminante
+        - idSonda
+        - emailUser
         - instante
         - latitud
         - longitud
@@ -228,6 +230,12 @@ components:
         idContaminante:
           type: integer
           example: 2
+        idSonda:
+          type: integer
+          example: 5
+        emailUser:
+          type: string
+          example: email@email.com
         instante:
           type: string
         valor:
@@ -244,6 +252,8 @@ components:
           format: float
       example:
         idContaminante: 4
+        idSonda: 5
+        emailUser: email@email.com
         instante: 24/08/2023
         valor: 123
         latitud: 4
