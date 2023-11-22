@@ -46,13 +46,31 @@ paths:
         "400":
           description: Invalid input
       x-swagger-router-controller: Mediciones
-  /mediciones/recuperar_medicions:
+  /mediciones/recuperar_medicions/{limit}:
     get:
       tags:
         - Mediciones
       summary: Recoger mediciones guardadas
       description: Recoger mediciones guardadas
       operationId: getMed
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+          example: email@email.com
+        - name: limit
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+          example: 100
       responses:
         "200":
           description: successful operation
@@ -263,12 +281,8 @@ components:
         name: medicion
     getMedicion:
       required:
-        - id
-        - idContaminante
-        - instante
-        - latitud
-        - longitud
-        - valor
+        - email
+        - limit
       type: object
       properties:
         id:
@@ -291,6 +305,12 @@ components:
         temperatura:
           type: number
           format: float
+        email:
+          type: number
+          format: float
+        limit:
+          type: integer
+          example: 50
       example:
         id: 10
         idContaminante: 4

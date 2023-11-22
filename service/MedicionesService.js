@@ -63,17 +63,20 @@ exports.addMed = function (body) {
  * Recoger mediciones guardadas
  * Recoger mediciones guardadas
  *
+ * email String 
+ * limit Integer 
  * returns List
  **/
 
 // getMed()->List(JSON)
-exports.getMed = function () {
+exports.getMed = function (email, limit) {
   return new Promise(function (resolve, reject) {
-    con.query("SELECT * FROM medicion", function (err, result, fields) {
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '"+email+"' LIMIT "+limit+"";
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
       if (err) throw err;
       var jsonToSend = {};
       jsonToSend['application/json'] = JSON.stringify(result);
-      console.log(jsonToSend);
       if (Object.keys(jsonToSend).length > 0) {
         resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
       } else {

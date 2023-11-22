@@ -18,9 +18,8 @@ module.exports.addMed = function addMed (req, res, next, body) {
     });
 };
 
-//eq:Txt, res:Txt, next:Txt --> getMed() --> JSON
-module.exports.getMed = function getMed (req, res, next) {
-  Mediciones.getMed()
+module.exports.getMed = function getMed (req, res, next, limit, email) {
+  Mediciones.getMed(email, limit)
     .then(function (response) {
       utils.writeJson(res, response);
     })
