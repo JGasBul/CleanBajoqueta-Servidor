@@ -16,22 +16,43 @@ exports.addMed = function (body) {
     var toSend = JSON.parse(jsonBody);
     console.log(toSend);
     var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (" + toSend["idContaminante"] + ", '" + toSend["instante"] + "', " + toSend["valor"] + ", " + toSend["latitud"] + ", " + toSend["longitud"] + ", " + toSend["temperatura"] + ")";
+    var sqlID = "SELECT * FROM medicion ORDER BY idMedicion DESC LIMIT 1";
     con.query(sql, function (err, result) {
       if (err) {
         console.log("Mysql error " + err)
         resolve(err);
         //throw err;
       } else {
-        console.log("1 record inserted");
-        console.log(result);
-        var jsonToSend = {};
-        jsonToSend['application/json'] = JSON.stringify(body);
-        console.log(body);
-        if (Object.keys(jsonToSend).length > 0) {
-          resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
-        } else {
-          resolve();
-        }
+        console.log("Record medicion inserted");
+        con.query(sqlID, function (err, result) {
+          var idMedicion = -1;
+          idMedicion = result[0]["idMedicion"];
+          if (idMedicion => 0) {
+            var sql3 = "INSERT INTO usuariomedicion (email, idMedicion) VALUES ('" + toSend["emailUser"] + "'," + idMedicion.toString() + ")";
+            con.query(sql3, function (err, result) {
+              if (err) {
+                console.log("Mysql error " + err);
+                resolve(err);
+              } else {
+                console.log("Record usuarioMedicion inserted");
+                var sql4 = "INSERT INTO sondamedicion (idSonda, idMedicion) VALUES (" + toSend["idSonda"] + "," + idMedicion.toString() + ")";
+                con.query(sql4, function (err, result) {
+                  if (err) {
+                    console.log("Mysql error " + err);
+                    resolve(err);
+                  } else {
+                    var jsonToSend = {};
+                    jsonToSend['application/json'] = jsonBody;
+                    console.log(body);
+                    resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+                  }
+                })
+              }
+            })
+          } else {
+            resolve();
+          }
+        })
       }
     });
   });
@@ -42,17 +63,20 @@ exports.addMed = function (body) {
  * Recoger mediciones guardadas
  * Recoger mediciones guardadas
  *
+ * email String 
+ * limit Integer 
  * returns List
  **/
 
 // getMed()->List(JSON)
-exports.getMed = function () {
+exports.getMed = function (email, limit) {
   return new Promise(function (resolve, reject) {
-    con.query("SELECT * FROM medicion", function (err, result, fields) {
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '"+email+"' LIMIT "+limit+"";
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
       if (err) throw err;
       var jsonToSend = {};
       jsonToSend['application/json'] = JSON.stringify(result);
-      console.log(jsonToSend);
       if (Object.keys(jsonToSend).length > 0) {
         resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
       } else {
