@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: API Clean Bajoqueta
-  description: ''
+  description: ""
   contact:
     email: pepegascobule@gmail.com
   version: 1.0.11
@@ -10,8 +10,8 @@ servers:
 tags:
   - name: Mediciones
     description: Metodos para trabajar con las mediciones
-  - name: Login
-    description: Metodos para autentificacion
+  - name: User
+    description: Metodo para trabajar con los usuarios
 paths:
   /mediciones/guardar_mediciones:
     post:
@@ -25,43 +25,61 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/setMedicion'
+              $ref: "#/components/schemas/setMedicion"
           application/xml:
             schema:
-              $ref: '#/components/schemas/setMedicion'
+              $ref: "#/components/schemas/setMedicion"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/setMedicion'
+              $ref: "#/components/schemas/setMedicion"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/setMedicion'
+                $ref: "#/components/schemas/setMedicion"
             application/xml:
               schema:
-                $ref: '#/components/schemas/setMedicion'
-        '400':
+                $ref: "#/components/schemas/setMedicion"
+        "400":
           description: Invalid input
       x-swagger-router-controller: Mediciones
-  /mediciones/recuperar_medicions:
+  /mediciones/recuperar_medicions/{limit}:
     get:
       tags:
         - Mediciones
       summary: Recoger mediciones guardadas
       description: Recoger mediciones guardadas
       operationId: getMed
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+          example: email@email.com
+        - name: limit
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+          example: 100
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/getMedicion'
+                  $ref: "#/components/schemas/getMedicion"
                 x-content-type: application/json
             application/xml:
               schema:
@@ -69,14 +87,14 @@ paths:
                 xml:
                   name: medicion
                 items:
-                  $ref: '#/components/schemas/getMedicion'
-        '400':
+                  $ref: "#/components/schemas/getMedicion"
+        "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
-  /login/getUserByEmail:
+  /user/getUserByEmail:
     get:
       tags:
-        - Login
+        - User
       summary: Comprobar si usuario existe
       description: Comprobar si usuario existe
       operationId: getUser
@@ -90,14 +108,14 @@ paths:
             type: string
             format: email
       responses:
-        '200':
+        "200":
           description: Se ha encontrado un registro
           content:
             applicaction/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/getUserByEmail'
+                  $ref: "#/components/schemas/getUserByEmail"
                 x-content-type: applicaction/json
             application/xml:
               schema:
@@ -105,14 +123,14 @@ paths:
                 xml:
                   name: user
                 items:
-                  $ref: '#/components/schemas/getUserByEmail'
-        '400':
-          description: Error al buscar usuarios
-      x-swagger-router-controller: Login
-  /login/insertUser:
+                  $ref: "#/components/schemas/getUserByEmail"
+        "400":
+          description: Error al buscar usuarios. Contacte con un administrador
+      x-swagger-router-controller: User
+  /user/insertUser:
     post:
       tags:
-        - Login
+        - User
       summary: Insertar nuevo usuario
       description: Añade un nuevo usuario a la base de datos
       operationId: insertUser
@@ -121,32 +139,103 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: "#/components/schemas/user"
           application/xml:
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: "#/components/schemas/user"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: "#/components/schemas/user"
         required: true
       responses:
-        '200':
-          description: Successful operation
+        "200":
+          description: Usuario Insertado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: "#/components/schemas/user"
             application/xml:
               schema:
-                $ref: '#/components/schemas/user'
-        '400':
-          description: Invalid input
-      x-swagger-router-controller: Login
+                $ref: "#/components/schemas/user"
+        "400":
+          description: Error al insertar usuarios. Contacte con un administrador
+      x-swagger-router-controller: User
+  /user/updateUser:
+    put:
+      tags:
+        - User
+      summary: Actualizar un usuario ya creado
+      description: Actualizar un usuario ya creado
+      operationId: updateUser
+      requestBody:
+        description: Actualizar un usuario ya creado
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/newUser"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/newUser"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/newUser"
+        required: true
+      responses:
+        "200":
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/newUser"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/newUser"
+        "400":
+          description: Error al actualizar usuarios. Contacte con un administrador
+      x-swagger-router-controller: User
+  /user/deleteByEmail:
+    delete:
+      tags:
+        - User
+      summary: Eliminar usuario filtrado por ID
+      description: Eliminar usuario filtrado por ID
+      operationId: deleteUser
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Se ha eliminado un registro
+          content:
+            applicaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getUserByEmail"
+                x-content-type: applicaction/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: user
+                items:
+                  $ref: "#/components/schemas/getUserByEmail"
+        "400":
+          description: Error al eliminar usuarios. Contacte con un administrador
+      x-swagger-router-controller: User
 components:
   schemas:
     setMedicion:
       required:
         - idContaminante
+        - idSonda
+        - emailUser
         - instante
         - latitud
         - longitud
@@ -159,6 +248,12 @@ components:
         idContaminante:
           type: integer
           example: 2
+        idSonda:
+          type: integer
+          example: 5
+        emailUser:
+          type: string
+          example: email@email.com
         instante:
           type: string
         valor:
@@ -175,6 +270,8 @@ components:
           format: float
       example:
         idContaminante: 4
+        idSonda: 5
+        emailUser: email@email.com
         instante: 24/08/2023
         valor: 123
         latitud: 4
@@ -184,12 +281,8 @@ components:
         name: medicion
     getMedicion:
       required:
-        - id
-        - idContaminante
-        - instante
-        - latitud
-        - longitud
-        - valor
+        - email
+        - limit
       type: object
       properties:
         id:
@@ -212,6 +305,12 @@ components:
         temperatura:
           type: number
           format: float
+        email:
+          type: number
+          format: float
+        limit:
+          type: integer
+          example: 50
       example:
         id: 10
         idContaminante: 4
@@ -244,7 +343,29 @@ components:
         email: email@email.com
         contraseña: esternocleidomastoideo
         nombreApellido: Jhon Doe
-        telefono: '123456789'
+        telefono: "123456789"
+    newUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        newEmail:
+          type: string
+          format: email
+        contraseña:
+          type: string
+          format: password
+        nombreApellido:
+          type: string
+        telefono:
+          type: string
+      example:
+        email: email@email.com
+        newEmail: newEmail@email.com
+        contraseña: newPass
+        nombreApellido: New Jhon Doe
+        telefono: "987654321"
     getUserByEmail:
       required:
         - email
