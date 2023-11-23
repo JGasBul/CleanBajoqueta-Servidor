@@ -15,5 +15,10 @@ To view the Swagger UI interface:
 ```
 open http://localhost:8080/docs
 ```
+To run the tests, you need to import the database file called test_bd which is inside the bd folder.
+Then, run:
+```
+npm test
+```
 
 This project leverages the mega-awesome [swagger-tools](https://github.com/apigee-127/swagger-tools) middleware which does most all the work.
