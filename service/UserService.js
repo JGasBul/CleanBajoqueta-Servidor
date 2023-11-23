@@ -110,7 +110,7 @@ exports.insertUser = function (body) {
  * Actualizar un usuario ya creado
  * Actualizar un usuario ya creado
  *
- * body NewUser Actualizar un usuario ya creado
+ * body NewUser Actualizar un usuario ya creado(Corregir, esta mal)
  * returns newUser
  **/
 exports.updateUser = function (body) {
