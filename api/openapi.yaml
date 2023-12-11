@@ -46,6 +46,19 @@ paths:
         "400":
           description: Invalid input
       x-swagger-router-controller: Mediciones
+  /mediciones/generar_mediciones:
+    post:
+      tags:
+        - Mediciones
+      summary: Genera 100 mediciones alrededor de la universidad 
+      description: Genera 100 mediciones alrededor de la universidad 
+      operationId: fakeMed
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Error al crear las mediciones. 
+      x-swagger-router-controller: Mediciones
   /mediciones/recuperar_medicions/{limit}:
     get:
       tags:
