@@ -41,6 +41,7 @@ exports.getUser = function (email) {
       if (err) throw err;
       var jsonData = {};
       jsonData = result;
+      jsonData[0]['imagen'] = Buffer.from(jsonData[0]['imagen'],'base64').toString();
       if (Object.keys(jsonData).length > 0) {
         var query = "SELECT * FROM telefono WHERE email = '" + email + "'";
         con.query(query, function (err, result, fields) {
@@ -73,7 +74,7 @@ exports.insertUser = function (body) {
   return new Promise(function (resolve, reject) {
     var jsonBody = JSON.stringify(body);
     var toSend = JSON.parse(jsonBody);
-    var query = "INSERT INTO usuario (email, contraseña, nombreApellido) VALUES ('" + toSend["email"] + "', '" + toSend["contraseña"] + "', '" + toSend["nombreApellido"] + "')";
+    var query = "INSERT INTO usuario (email, contraseña, nombreApellido, imagen) VALUES ('" + toSend["email"] + "', '" + toSend["contraseña"] + "', '" + toSend["nombreApellido"] + "', '" + toSend["imagen"] + "')";
     console.log(query);
     con.query(query, function (err, result) {
       if (err) {

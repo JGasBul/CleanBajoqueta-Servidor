@@ -37,7 +37,7 @@ INSERT INTO `contaminante` (`idContaminante`, `nombre`) VALUES
 CREATE TABLE IF NOT EXISTS `medicion` (
   `idMedicion` int(11) NOT NULL AUTO_INCREMENT,
   `idContaminante` int(11) DEFAULT NULL,
-  `instante` TIMESTAMP NULL DEFAULT NULL,
+  `instante` varchar(10) DEFAULT NULL,
   `valor` float DEFAULT NULL,
   `latitud` float DEFAULT 0,
   `longitud` float DEFAULT 0,

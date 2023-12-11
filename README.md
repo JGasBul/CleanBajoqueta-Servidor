@@ -16,7 +16,7 @@ To view the Swagger UI interface:
 open http://localhost:8080/docs
 ```
 To run the tests, you need to import the database file called test_bd which is inside the bd folder.
-Then, run the server and in a new console run:
+Then, run:
 ```
 npm test
 ```

@@ -71,7 +71,7 @@ exports.addMed = function (body) {
 // getMed()->List(JSON)
 exports.getMed = function (email, limit) {
   return new Promise(function (resolve, reject) {
-    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "' LIMIT " + limit + "";
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '"+email+"' LIMIT "+limit+"";
     console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
@@ -86,58 +86,3 @@ exports.getMed = function (email, limit) {
   });
 }
 
-/**
- * Genera 100 mediciones alrededor de la universidad
- * Genera 100 mediciones alrededor de la universidad
- *
- * no response value expected for this operation
- **/
-exports.fakeMed = function () {
-  return new Promise(function (resolve, reject) {
-    var upv_location = [{
-      'latitud': 38.996254, 'longitud': -0.165665
-    }]
-    var mappoints = [];
-    for (let index = 0; index < 100; index++) {
-      mappoints.push(randomGeo(upv_location[0], 2000));
-    }
-    console.log(mappoints);
-    mappoints.forEach(point => {
-      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', 123, " + point.latitud + ", " + point.longitud + ", 20)";
-      con.query(sql, function (err, result) {
-        if (err) throw err;
-        var jsonToSend = {};
-        jsonToSend['application/json'] = JSON.stringify(result);
-        if (Object.keys(jsonToSend).length > 0) {
-          resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
-        } else {
-          resolve();
-        }
-      });
-    });
-    resolve();
-  });
-}
-
-//Create random lat/long coordinates in a specified radius around a center point
-function randomGeo(center, radius) {
-  var y0 = center.latitud;
-  var x0 = center.longitud;
-  var rd = radius / 111300; //about 111300 meters in one degree
-
-  var u = Math.random();
-  var v = Math.random();
-
-  var w = rd * Math.sqrt(u);
-  var t = 2 * Math.PI * v;
-  var x = w * Math.cos(t);
-  var y = w * Math.sin(t);
-
-  var newlat = y + y0;
-  var newlon = x + x0;
-
-  return {
-    'latitud': newlat.toFixed(5),
-    'longitud': newlon.toFixed(5)
-  };
-}
