@@ -50,14 +50,14 @@ paths:
     post:
       tags:
         - Mediciones
-      summary: Genera 100 mediciones alrededor de la universidad 
-      description: Genera 100 mediciones alrededor de la universidad 
+      summary: Genera 100 mediciones alrededor de la universidad
+      description: Genera 100 mediciones alrededor de la universidad
       operationId: fakeMed
       responses:
         "200":
           description: Successful operation
         "400":
-          description: Error al crear las mediciones. 
+          description: Error al crear las mediciones.
       x-swagger-router-controller: Mediciones
   /mediciones/recuperar_medicions/{limit}:
     get:
@@ -104,6 +104,51 @@ paths:
         "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
+  /mediciones/mediciones_zona/{latitud}&{longitud}:
+    get:
+      tags:
+        - Mediciones
+      summary: Recoger mediciones en una zona en especifico
+      description: Recoger mediciones en una zona en especifico
+      operationId: getMedZone
+      parameters:
+        - name: latitud
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: 38.995593
+        - name: longitud
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: -0.167132
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: medicion
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+        "400":
+          description: Invalid status value
+      x-swagger-router-controller: Mediciones
+
   /user/getUserByEmail:
     get:
       tags:

@@ -41,3 +41,13 @@ module.exports.getMed = function getMed(req, res, next, limit, email) {
       utils.writeJson(res, response);
     });
 };
+
+module.exports.getMedZone = function getMedZone (req, res, next, latitud, longitud) {
+  Mediciones.getMedZone(latitud, longitud)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
