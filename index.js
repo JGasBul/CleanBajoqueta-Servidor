@@ -10,7 +10,10 @@ var serverPort = 8080;
 // swaggerRouter configuration
 var options = {
     routing: {
-        controllers: path.join(__dirname, './controllers')
+        controllers: path.join(__dirname, './controllers'),
+        cors:{
+            'Access-Control-Allow-Origin':'*'
+        }
     },
 };
 
