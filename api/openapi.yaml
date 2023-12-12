@@ -104,7 +104,7 @@ paths:
         "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
-  /mediciones/mediciones_zona/{latitud}&{longitud}:
+  /mediciones/mediciones_zona:
     get:
       tags:
         - Mediciones
@@ -113,18 +113,14 @@ paths:
       operationId: getMedZone
       parameters:
         - name: latitud
-          in: path
+          in: query
           required: true
-          style: simple
-          explode: false
           schema:
             type: string
           example: 38.995593
         - name: longitud
-          in: path
+          in: query
           required: true
-          style: simple
-          explode: false
           schema:
             type: string
           example: -0.167132
