@@ -119,6 +119,33 @@ exports.fakeMed = function () {
   });
 }
 
+/**
+ * Recoger mediciones en una zona en especifico
+ * Recoger mediciones en una zona en especifico
+ *
+ * latitud String 
+ * longitud String 
+ * returns List
+ **/
+exports.getMedZone = function (latitud, longitud) {
+  return new Promise(function (resolve, reject) {
+    console.log("Longitud: " + longitud);
+    console.log("Longitud: " + latitud);
+    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' HAVING distance < 1 ORDER BY distance limit 100";
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 //Create random lat/long coordinates in a specified radius around a center point
 function randomGeo(center, radius) {
   var y0 = center.latitud;
