@@ -110,36 +110,78 @@ exports.insertUser = function (body) {
  * Actualizar un usuario ya creado
  * Actualizar un usuario ya creado
  *
- * body NewUser Actualizar un usuario ya creado(Corregir, esta mal)
+ * body Actualizar un usuario ya creado
  * returns newUser
  **/
-exports.updateUser = function (body) {
+exports.updateUser = function (body, email) {
   return new Promise(function (resolve, reject) {
+    let query = "";
+    var telefono = false;
     var jsonBody = JSON.stringify(body);
-    var dataUpdate = JSON.parse(jsonBody);
-    var query = "UPDATE usuario SET email='" + dataUpdate["newEmail"] + "', contraseña='" + dataUpdate["contraseña"] + "', nombreApellido='" + dataUpdate["nombreApellido"] + "' WHERE  email='" + dataUpdate["email"] + "';"
-    var query2 = "UPDATE telefono SET telefono='" + dataUpdate["telefono"] + "' WHERE  email='" + dataUpdate["newEmail"] + "';"
-    con.query(query, function (err, result) {
+    var toSend = JSON.parse(jsonBody);
+
+    if (toSend["email"]) {
+      console.log("Entro dentro de email");
+      query += `email = '${toSend["email"]}',`
+    } if (toSend["contraseña"]) {
+      console.log("Entro dentro de contraseña");
+      query += `contraseña = '${toSend["contraseña"]}',`
+    } if (toSend["rol"]) {
+      console.log("Entro dentro de rol");
+      query += `rol = '${toSend["rol"]}',`
+    } if (toSend["nombreApellido"]) {
+      console.log("Entro dentro de nombreApellido");
+      query += `nombreApellido = '${toSend["nombreApellido"]}',`
+    } if (toSend["imagen"]) {
+      console.log("Entro dentro de imagen");
+      query += `imagen = '${toSend["imagen"]}',`
+    } if (toSend["verificado"]) {
+      console.log("Entro dentro de verificado");
+      query += `verificado = '${toSend["verificado"]}',`
+    } if (toSend["token"]) {
+      console.log("Entro dentro de token");
+      query += `token = '${toSend["token"]}',`
+    } if (toSend["telefono"]) {
+      telefono = true;
+    }
+    var correctQuery = query.substring(0, query.length - 1);
+    //Cambiar todas las queries a esta forma que queda mas bonito
+    let newUser = `UPDATE usuario SET ${correctQuery} WHERE email = '${email}'`;
+    console.log(newUser);
+    con.query(newUser, function (err, result) {
       if (err) {
         console.log("Mysql error " + err)
         resolve(err);
         //throw err;
       } else {
-        console.log("Actualizado datos correctamente");
-        con.query(query2, function (err, result) {
-          if (err) {
-            console.log("Mysql error " + err)
-            resolve(err);
-            //throw err;
+        var jsonToSend = {};
+        jsonToSend['application/json'] = JSON.stringify(body);
+        if (Object.keys(jsonToSend).length > 0) {
+          if (telefono) {
+            var query = `UPDATE telefono SET telefono = '${toSend["telefono"]}' WHERE email = '${toSend["email"]}'`;
+            console.log(query);
+            con.query(query, function (err, result) {
+              if (err) {
+                console.log("Mysql error " + err)
+                resolve(err);
+                //throw err;
+              } else {
+                console.log("1 record inserted");
+                if (Object.keys(jsonToSend).length > 0) {
+                  resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+                } else {
+                  resolve();
+                }
+              }
+            });
           } else {
-            console.log("Actualizado telefono correctamente");
-            if (Object.keys(result).length > 0) {
-              resolve(dataUpdate);
+            if (Object.keys(jsonToSend).length > 0) {
+              resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
             } else {
               resolve();
             }
           }
-        });
+        }
       }
     });
   });

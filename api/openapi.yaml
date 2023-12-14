@@ -46,6 +46,19 @@ paths:
         "400":
           description: Invalid input
       x-swagger-router-controller: Mediciones
+  /mediciones/generar_mediciones:
+    post:
+      tags:
+        - Mediciones
+      summary: Genera 100 mediciones alrededor de la universidad
+      description: Genera 100 mediciones alrededor de la universidad
+      operationId: fakeMed
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Error al crear las mediciones.
+      x-swagger-router-controller: Mediciones
   /mediciones/recuperar_medicions/{limit}:
     get:
       tags:
@@ -91,6 +104,47 @@ paths:
         "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
+  /mediciones/mediciones_zona:
+    get:
+      tags:
+        - Mediciones
+      summary: Recoger mediciones en una zona en especifico
+      description: Recoger mediciones en una zona en especifico
+      operationId: getMedZone
+      parameters:
+        - name: latitud
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 38.995593
+        - name: longitud
+          in: query
+          required: true
+          schema:
+            type: string
+          example: -0.167132
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: medicion
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+        "400":
+          description: Invalid status value
+      x-swagger-router-controller: Mediciones
+
   /user/getUserByEmail:
     get:
       tags:
@@ -115,7 +169,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/getUserByEmail"
+                  $ref: "#/components/schemas/user"
                 x-content-type: applicaction/json
             application/xml:
               schema:
@@ -123,7 +177,7 @@ paths:
                 xml:
                   name: user
                 items:
-                  $ref: "#/components/schemas/getUserByEmail"
+                  $ref: "#/components/schemas/user"
         "400":
           description: Error al buscar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
@@ -160,25 +214,34 @@ paths:
         "400":
           description: Error al insertar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
-  /user/updateUser:
+  /user/updateUserByEmail:
     put:
       tags:
         - User
       summary: Actualizar un usuario ya creado
       description: Actualizar un usuario ya creado
       operationId: updateUser
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
       requestBody:
         description: Actualizar un usuario ya creado
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/newUser"
+              $ref: "#/components/schemas/user"
           application/xml:
             schema:
-              $ref: "#/components/schemas/newUser"
+              $ref: "#/components/schemas/user"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/newUser"
+              $ref: "#/components/schemas/user"
         required: true
       responses:
         "200":
@@ -186,10 +249,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/newUser"
+                $ref: "#/components/schemas/user"
             application/xml:
               schema:
-                $ref: "#/components/schemas/newUser"
+                $ref: "#/components/schemas/user"
         "400":
           description: Error al actualizar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
@@ -212,20 +275,6 @@ paths:
       responses:
         "200":
           description: Se ha eliminado un registro
-          content:
-            applicaction/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/getUserByEmail"
-                x-content-type: applicaction/json
-            application/xml:
-              schema:
-                type: array
-                xml:
-                  name: user
-                items:
-                  $ref: "#/components/schemas/getUserByEmail"
         "400":
           description: Error al eliminar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
@@ -322,11 +371,6 @@ components:
       xml:
         name: medicion
     user:
-      required:
-        - contraseña
-        - email
-        - nombreApellido
-        - telefono
       type: object
       properties:
         email:
@@ -335,44 +379,23 @@ components:
         contraseña:
           type: string
           format: password
+        rol:
+          type: integer
         nombreApellido:
+          type: string
+        imagen:
+          type: string
+        verificado:
+          type: integer
+        token:
           type: string
         telefono:
           type: string
       example:
         email: email@email.com
         contraseña: esternocleidomastoideo
+        rol: 1
         nombreApellido: Jhon Doe
+        imagen: "Imagen"
+        verificado: 1
         telefono: "123456789"
-    newUser:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        newEmail:
-          type: string
-          format: email
-        contraseña:
-          type: string
-          format: password
-        nombreApellido:
-          type: string
-        telefono:
-          type: string
-      example:
-        email: email@email.com
-        newEmail: newEmail@email.com
-        contraseña: newPass
-        nombreApellido: New Jhon Doe
-        telefono: "987654321"
-    getUserByEmail:
-      required:
-        - email
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-      example:
-        email: email@email.com

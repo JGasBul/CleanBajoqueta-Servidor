@@ -38,14 +38,10 @@ module.exports.insertUser = function insertUser(req, res, next, body) {
     });
 };
 
-module.exports.updateUser = function updateUser(req, res, next, body) {
-  User.updateUser(body)
+module.exports.updateUser = function updateUser(req, res, next, body, email) {
+  User.updateUser(body, email)
     .then(function (response) {
-      if (response["code"]) {
-        utils.writeJson(res, response, 400);
-      } else {
-        utils.writeJson(res, response);
-      }
+      utils.writeJson(res, response);
     })
     .catch(function (response) {
       utils.writeJson(res, response);
