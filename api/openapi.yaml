@@ -104,6 +104,43 @@ paths:
         "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
+  /mediciones/ultima_medicion:
+    get:
+      tags:
+        - Mediciones
+      summary: Recoger ultima medicion de un usuario
+      description: Recoger ultima medicion de un usuario
+      operationId: lastMed
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+          example: email@email.com
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: medicion
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+        "400":
+          description: Invalid status value
+      x-swagger-router-controller: Mediciones
   /mediciones/mediciones_zona:
     get:
       tags:

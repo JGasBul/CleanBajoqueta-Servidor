@@ -87,6 +87,31 @@ exports.getMed = function (email, limit) {
 }
 
 /**
+ * Recoger ultima medicion
+ *
+ * email String 
+ * returns List
+ **/
+
+// lastMed()->List(JSON)
+exports.lastMed = function (email) {
+  return new Promise(function (resolve, reject) {
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "' AND instante = (SELECT MAX(instante) FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "')"
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+/**
  * Genera 100 mediciones alrededor de la universidad
  * Genera 100 mediciones alrededor de la universidad
  *
@@ -103,7 +128,7 @@ exports.fakeMed = function () {
     }
     console.log(mappoints);
     mappoints.forEach(point => {
-      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', "+ getRandomArbitrary(0, 101) +", " + point.latitud + ", " + point.longitud + ", "+getRandomArbitrary(20, 45)+")";
+      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', " + getRandomArbitrary(0, 101) + ", " + point.latitud + ", " + point.longitud + ", " + getRandomArbitrary(20, 45) + ")";
       con.query(sql, function (err, result) {
         if (err) throw err;
         var jsonToSend = {};
@@ -134,7 +159,7 @@ exports.getMedZone = function (latitud, longitud) {
     // Ordenada por distancia
     //var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' HAVING distance < 1 ORDER BY distance limit 100";
     //Ordenada por ultima añadida
-    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' ORDER BY idMedicion limit 100";
+    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '" + require('moment')().format('YYYY-MM-DD 00:00:00') + "' ORDER BY idMedicion limit 100";
     console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
