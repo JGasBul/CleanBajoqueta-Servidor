@@ -131,7 +131,10 @@ exports.getMedZone = function (latitud, longitud) {
   return new Promise(function (resolve, reject) {
     console.log("Longitud: " + longitud);
     console.log("Longitud: " + latitud);
-    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' HAVING distance < 1 ORDER BY distance limit 100";
+    // Ordenada por distancia
+    //var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' HAVING distance < 1 ORDER BY distance limit 100";
+    //Ordenada por ultima añadida
+    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' ORDER BY idMedicion limit 100";
     console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
