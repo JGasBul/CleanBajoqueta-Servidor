@@ -25,6 +25,28 @@ exports.deleteUser = function (email) {
   });
 }
 
+/**
+ * Recoger todos los usuarios
+ * Recoger todos los usuarios
+ *
+ * returns List
+ **/
+exports.getAllUsers = function () {
+  return new Promise(function (resolve, reject) {
+    var query = "SELECT * FROM usuario a LEFT JOIN telefono b ON a.email = b.email";
+    console.log(query);
+    con.query(query, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)]);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
 
 /**
  * Comprobar si usuario existe
@@ -45,7 +67,7 @@ exports.getUser = function (email) {
         var query = "SELECT * FROM telefono WHERE email = '" + email + "'";
         con.query(query, function (err, result, fields) {
           if (err) throw err;
-          jsonData[0]['imagen'] = Buffer.from(jsonData[0]['imagen'],'base64').toString();
+          jsonData[0]['imagen'] = Buffer.from(jsonData[0]['imagen'], 'base64').toString();
           jsonData[0]["telefono"] = result[0]["telefono"]
           var jsonToSend = {};
           jsonToSend['application/json'] = JSON.stringify(jsonData);
