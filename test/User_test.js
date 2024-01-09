@@ -17,9 +17,9 @@ const call_get_api = async function (request_header) {
     .set('email', request_header);
 }
 
-const call_put_api = async function (request_body) {
-  return api.put('/user/updateUser')
-    .send(request_body);
+const call_put_api = async function (request_body, request_header) {
+  return api.put('/user/updateUserByEmail')
+    .send(request_body).set('email', request_header);
 }
 
 const call_delete_api = async function (request_header) {
@@ -42,24 +42,11 @@ describe('Test sobre el controlador y la logica de negocio de Ususarios', functi
       expect(response.status).to.equal(200);
     });
 
-
-    it("Response has the required fields", function () {
-      const responseData = body;
-
-      expect(responseData).to.be.an('object');
-      expect(responseData.email).to.exist.and.to.be.a('string');
-      expect(responseData.contraseña).to.exist.and.to.be.a('string');
-      expect(responseData.nombreApellido).to.exist.and.to.be.a('string');
-      expect(responseData.telefono).to.exist.and.to.be.a('string');
-    });
-
-
     it("Email is in a valid format", function () {
       const responseData = body;
 
       expect(responseData.email).to.exist.and.to.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/);
     });
-
 
     it("Contraseña meets the required criteria", function () {
       const responseData = body;
@@ -67,7 +54,6 @@ describe('Test sobre el controlador y la logica de negocio de Ususarios', functi
       expect(responseData).to.be.an('object');
       expect(responseData.contraseña).to.exist.and.to.be.a('string')
     });
-
 
     it("NombreApellido is a non-empty string", function () {
       const responseData = body;
@@ -127,12 +113,11 @@ describe('Test sobre el controlador y la logica de negocio de Ususarios', functi
   describe('Test actualizar usuarios', function () {
     before(async function () {
       response = await call_put_api({
-        "email": "email@email.com",
-        "newEmail": "newEmail@email.com",
+        "email": "newEmail@email.com",
         "contraseña": "newPass",
         "nombreApellido": "New Jhon Doe",
-        "telefono": "123456789"
-      });
+        "telefono": "987654321"
+      }, "email@email.com");
       body = response.body;
     });
 
@@ -146,13 +131,6 @@ describe('Test sobre el controlador y la logica de negocio de Ususarios', functi
       const email = responseData.email;
 
       expect(email).to.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/);
-    });
-
-
-    it("New email is in a valid format", function () {
-      const responseData = body;
-
-      expect(responseData.newEmail).to.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, "Email is not in a valid format");
     });
 
 
