@@ -103,7 +103,7 @@ exports.fakeMed = function () {
     }
     console.log(mappoints);
     mappoints.forEach(point => {
-      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', "+ getRandomArbitrary(0, 101) +", " + point.latitud + ", " + point.longitud + ", "+getRandomArbitrary(20, 45)+")";
+      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', " + getRandomArbitrary(0, 101) + ", " + point.latitud + ", " + point.longitud + ", " + getRandomArbitrary(20, 45) + ")";
       con.query(sql, function (err, result) {
         if (err) throw err;
         var jsonToSend = {};
@@ -134,7 +134,35 @@ exports.getMedZone = function (latitud, longitud) {
     // Ordenada por distancia
     //var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' HAVING distance < 1 ORDER BY distance limit 100";
     //Ordenada por ultima añadida
-    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '"+ require('moment')().format('YYYY-MM-DD 00:00:00') +"' ORDER BY idMedicion limit 100";
+    var sql = "SELECT *, ( 6371 * acos(cos(radians(" + latitud + ")) * cos(radians(latitud)) * cos(radians(longitud) - radians(" + longitud + ")) + sin(radians(" + latitud + ")) * sin(radians(latitud)))) AS distance FROM medicion WHERE instante > '" + require('moment')().format('YYYY-MM-DD 00:00:00') + "' ORDER BY idMedicion limit 100";
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+/**
+ * Recoger mediciones en un rango de horas en especifico
+ * Recoger mediciones en un rango de horas en especifico
+ *
+ * email String 
+ * firstDate String 
+ * lastDate String 
+ * returns List
+ **/
+exports.getMedHour = function (email, firstDate, lastDate) {
+  return new Promise(function (resolve, reject) {
+    console.log("firstDate: " + firstDate);
+    console.log("lastDate: " + lastDate);
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "' WHERE instante >= '" + require('moment')(firstDate, 'YYYY-MM-DD').format('YYYY-MM-DD') + "' and instante < '" + require('moment')(lastDate, 'YYYY-MM-DD').format('YYYY-MM-DD') + "'";
     console.log(sql);
     con.query(sql, function (err, result, fields) {
       if (err) throw err;
