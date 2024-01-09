@@ -103,7 +103,7 @@ exports.fakeMed = function () {
     }
     console.log(mappoints);
     mappoints.forEach(point => {
-      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', 123, " + point.latitud + ", " + point.longitud + ", 20)";
+      var sql = "INSERT INTO medicion (idContaminante, instante, valor, latitud, longitud, temperatura) VALUES (4, '" + require('moment')().format('YYYY-MM-DD HH:mm:ss') + "', "+ getRandomArbitrary(0, 101) +", " + point.latitud + ", " + point.longitud + ", "+getRandomArbitrary(20, 45)+")";
       con.query(sql, function (err, result) {
         if (err) throw err;
         var jsonToSend = {};
@@ -167,4 +167,8 @@ function randomGeo(center, radius) {
     'latitud': newlat.toFixed(5),
     'longitud': newlon.toFixed(5)
   };
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
 }
