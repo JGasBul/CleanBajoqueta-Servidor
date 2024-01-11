@@ -51,3 +51,13 @@ module.exports.getMedZone = function getMedZone (req, res, next, latitud, longit
       utils.writeJson(res, response);
     });
 };
+
+module.exports.getMedHour = function getMedHour (req, res, next, email ,firstDate, lastDate) {
+  Mediciones.getMedHour(email, firstDate, lastDate)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};

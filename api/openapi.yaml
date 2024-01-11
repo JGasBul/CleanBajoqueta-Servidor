@@ -144,7 +144,59 @@ paths:
         "400":
           description: Invalid status value
       x-swagger-router-controller: Mediciones
-
+  /mediciones/mediciones_rango_fecha:
+    get:
+      tags:
+        - Mediciones
+      summary: Recoger mediciones en un rango de fechas en especifico
+      description: Recoger mediciones en un rango de fechas en especifico
+      operationId: getMedHour
+      parameters:
+        - name: email
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: email
+          example: email@email.com
+        - name: first_date
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: 2024/01/01
+        - name: last_date
+          in: header
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: 2024/01/01
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: medicion
+                items:
+                  $ref: "#/components/schemas/getMedicion"
+        "400":
+          description: Invalid status value
+      x-swagger-router-controller: Mediciones
   /user/getUserByEmail:
     get:
       tags:
