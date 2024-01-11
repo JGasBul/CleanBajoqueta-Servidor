@@ -13,7 +13,15 @@ module.exports.deleteUser = function deleteUser(req, res, next, email) {
       utils.writeJson(res, response);
     });
 };
-
+module.exports.getAllUsers = function getAllUsers(req, res, next) {
+  User.getAllUsers()
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
 module.exports.getUser = function getUser(req, res, next, email) {
   User.getUser(email)
     .then(function (response) {

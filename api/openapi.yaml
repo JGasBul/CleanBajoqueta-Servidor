@@ -181,6 +181,33 @@ paths:
         "400":
           description: Error al buscar usuarios. Contacte con un administrador
       x-swagger-router-controller: User
+  /user/getAllUsers:
+    get:
+      tags:
+        - User
+      summary: Comprobar si usuario existe
+      description: Comprobar si usuario existe
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: Se ha encontrado un registro
+          content:
+            applicaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/user"
+                x-content-type: applicaction/json
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  name: user
+                items:
+                  $ref: "#/components/schemas/user"
+        "400":
+          description: Error al buscar usuarios. Contacte con un administrador
+      x-swagger-router-controller: User
   /user/insertUser:
     post:
       tags:
