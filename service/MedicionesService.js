@@ -87,6 +87,31 @@ exports.getMed = function (email, limit) {
 }
 
 /**
+ * Recoger ultima medicion
+ *
+ * email String 
+ * returns List
+ **/
+
+// lastMed()->List(JSON)
+exports.lastMed = function (email) {
+  return new Promise(function (resolve, reject) {
+    var sql = "SELECT * FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "' AND instante = (SELECT MAX(instante) FROM usuariomedicion a INNER JOIN medicion b ON b.idMedicion LIKE CONCAT('%' + a.idMedicion + '%') AND a.email LIKE '" + email + "')"
+    console.log(sql);
+    con.query(sql, function (err, result, fields) {
+      if (err) throw err;
+      var jsonToSend = {};
+      jsonToSend['application/json'] = JSON.stringify(result);
+      if (Object.keys(jsonToSend).length > 0) {
+        resolve(jsonToSend[Object.keys(jsonToSend)[0]]);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+/**
  * Genera 100 mediciones alrededor de la universidad
  * Genera 100 mediciones alrededor de la universidad
  *
